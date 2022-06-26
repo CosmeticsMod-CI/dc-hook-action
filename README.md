@@ -29,7 +29,7 @@ Discord webhook with file attachements for GitHub Actions
 
 ### Basic usage with file attachments
 ```yml
-uses: cosmeticsmod-ci/dc-hook-action@v1
+uses: cosmeticsmod-ci/dc-hook-action@v1.1
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
   webhook: ${{ secrets.WEBHOOK }}
@@ -38,7 +38,7 @@ with:
 
 ### Customized messages
 ```yml
-uses: cosmeticsmod-ci/dc-hook-action@v1
+uses: cosmeticsmod-ci/dc-hook-action@v1.1
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
   webhook: ${{ secrets.WEBHOOK }}
@@ -49,7 +49,7 @@ with:
 
 ### Archive directory
 ```yml
-uses: cosmeticsmod-ci/dc-hook-action@v1
+uses: cosmeticsmod-ci/dc-hook-action@v1.1
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
   webhook: ${{ secrets.WEBHOOK }}
