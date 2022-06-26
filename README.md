@@ -23,12 +23,23 @@ Discord webhook with file attachements for GitHub Actions
 
 ## Example usage
 
+
+### Basic usage with file attachments
 ```yml
 uses: cosmeticsmod-ci/dc-hook-action@v1
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
   webhook: ${{ secrets.WEBHOOK }}
-  files: "files/FILE2.ext"
+  files: "builds/file1.ext,builds/file2.ext"
+```
+
+### Customized messages
+```yml
+uses: cosmeticsmod-ci/dc-hook-action@v1
+with:
+  token: ${{ secrets.GITHUB_TOKEN }}
+  webhook: ${{ secrets.WEBHOOK }}
+  files: "logs/output.log"
   message: "Workflow finished in {repo}"
   description: "via ${{ github.event_name }}"
 ```
