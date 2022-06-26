@@ -1,8 +1,11 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const fs = require('fs');
-const Form = require('form-data');
 
+const fs = require('fs');
+const path = require('path');
+const tar = require('tar');
+
+const Form = require('form-data');
 
 try {
   const token: string = core.getInput('token');
@@ -14,6 +17,7 @@ try {
   const description: string = core.getInput('description');
   const message: string = core.getInput('message');
 
+  const archiveDir: Boolean = core.getInput('archiveDir');
 
   if (!process.env.GITHUB_RUN_ID) {
     throw Error("No RUN_ID found!");
@@ -25,7 +29,7 @@ try {
   octokit.rest.actions.listJobsForWorkflowRun({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    run_id: parseInt( process.env.GITHUB_RUN_ID, 10)
+    run_id: parseInt(process.env.GITHUB_RUN_ID, 10)
   }).then((res) => {
 
     let status: Status = 'Success';
@@ -67,7 +71,7 @@ try {
       payload.content = filter(message);
     }
 
-    if(description && description.length > 0){
+    if (description && description.length > 0) {
       payload.embeds[0].description = filter(description);
     }
 
@@ -76,15 +80,22 @@ try {
     if (paths && status == 'Success') {
       const files = paths.split(",");
       for (let i = 0; i < files.length; i++) {
-        const path = files[i];
-        if (fs.existsSync(path)) {
-          if (fs.statSync(path).isFile()) {
-            data.append('file' + i, fs.createReadStream(path));
+        const fpath = files[i];
+        if (fs.existsSync(fpath)) {
+          if (fs.statSync(fpath).isFile()) {
+            data.append('file' + i, fs.createReadStream(fpath));
+          } else if (fs.statSync(fpath).isDirectory()) {
+            if (archiveDir) {
+              data.append('file' + i, tar.c({ gzip: true, sync: true }, [fpath]), { filename: path.parse(fpath).name + ".tar.gz" });
+            } else {
+              let j = 0;
+              fs.readdirSync(fpath).filter(file => fs.statSync(path.join(fpath, file)).isFile()).forEach(file => data.append('file' + i + "_" + (j++), fs.createReadStream(path.join(fpath, file))));
+            }
           } else {
-            console.log("Cannot handle directories: " + path)
+            console.log("Skip: " + fpath)
           }
         } else {
-          console.log("Path not found: " + path)
+          console.log("Path not found: " + fpath)
         }
       }
     }

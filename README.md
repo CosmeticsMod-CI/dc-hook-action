@@ -21,6 +21,9 @@ Discord webhook with file attachements for GitHub Actions
 ### `description`
 **Optional** A description in the embedded message.
 
+### `archiveDir`
+**Optional** Directories will be archived with tar.gz.
+
 ## Example usage
 
 
@@ -42,6 +45,16 @@ with:
   files: "logs/output.log"
   message: "Workflow finished in {repo}"
   description: "via ${{ github.event_name }}"
+```
+
+### Archive directory
+```yml
+uses: cosmeticsmod-ci/dc-hook-action@v1
+with:
+  token: ${{ secrets.GITHUB_TOKEN }}
+  webhook: ${{ secrets.WEBHOOK }}
+  files: "logs/"
+  archiveDir: true
 ```
 
 ## Placeholder
