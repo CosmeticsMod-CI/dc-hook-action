@@ -1,0 +1,25 @@
+name: 'Discord webhook action'
+description: 'Discord webhook with file attachements for GitHub Actions'
+inputs:
+  token:
+    description: 'GitHub Token'
+    required: true
+  webhook:
+    description: 'Discord Webhook url'
+    required: true
+  files:
+    description: 'Single or comma delimited list of paths to files which should be included'
+    required: false
+  title:
+    description: 'Title of the embed'
+    required: false
+    default: "${{ github.workflow }}: {status}"
+  message:
+    description: 'A message above files and embed'
+    required: false
+  description:
+    description: 'A description in the embed'
+    required: false
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
